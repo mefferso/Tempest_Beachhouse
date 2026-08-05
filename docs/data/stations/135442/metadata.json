@@ -1,0 +1,23 @@
+{
+  "station_name": "Beach House",
+  "station_id": 135442,
+  "timezone": "America/Chicago",
+  "latitude": 30.24759,
+  "longitude": -88.14754,
+  "archive_start_configured": "2024-03-18",
+  "data_start": "2024-03-18",
+  "data_end": "2026-08-03",
+  "days_archived": 869,
+  "hourly_rows": 20264,
+  "generated_at_utc": "2026-08-05T02:37:41.996070Z",
+  "raw_frequency": "WeatherFlow historical one-minute observations",
+  "units": {
+    "temperature": "degF",
+    "dewpoint": "degF",
+    "relative_humidity": "percent",
+    "pressure": "mb station pressure",
+    "wind": "mph",
+    "precipitation": "inches",
+    "lightning_distance": "miles"
+  }
+}

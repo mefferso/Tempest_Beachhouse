@@ -1,0 +1,23 @@
+{
+  "station_name": "Mandeville House",
+  "station_id": 105815,
+  "timezone": "America/Chicago",
+  "latitude": 30.38141,
+  "longitude": -90.06779,
+  "archive_start_configured": "2021-12-29",
+  "data_start": "2021-12-29",
+  "data_end": "2026-08-03",
+  "days_archived": 1679,
+  "hourly_rows": 40097,
+  "generated_at_utc": "2026-08-05T02:37:34.334746Z",
+  "raw_frequency": "WeatherFlow historical one-minute observations",
+  "units": {
+    "temperature": "degF",
+    "dewpoint": "degF",
+    "relative_humidity": "percent",
+    "pressure": "mb station pressure",
+    "wind": "mph",
+    "precipitation": "inches",
+    "lightning_distance": "miles"
+  }
+}
