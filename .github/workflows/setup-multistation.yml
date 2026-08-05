@@ -20,40 +20,8 @@ jobs:
       - name: Patch website and collection workflow
         shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          index = Path('docs/index.html')
-          text = index.read_text()
-          marker = '  <script src="app.js" defer></script>'
-          replacement = '  <script src="station-switch.js"></script>\n  <script src="app.js" defer></script>'
-          if 'station-switch.js' not in text:
-              if marker not in text:
-                  raise SystemExit('index.html script marker not found')
-              text = text.replace(marker, replacement, 1)
-          index.write_text(text)
-
-          css = Path('docs/styles.css')
-          styles = css.read_text()
-          addition = '''
-
-.station-switch { padding: .75rem 1rem; align-self: center; }
-.station-buttons { display: flex; gap: .45rem; margin-top: .35rem; flex-wrap: wrap; }
-.station-button { border: 1px solid rgba(148,163,184,.35); background: rgba(15,23,42,.6); color: inherit; border-radius: 999px; padding: .45rem .8rem; cursor: pointer; font: inherit; }
-.station-button:hover { border-color: rgba(56,189,248,.75); }
-.station-button.active { background: #0ea5e9; color: white; border-color: #38bdf8; }
-@media (max-width: 760px) { .station-switch { width: 100%; } }
-'''
-          if '.station-switch {' not in styles:
-              css.write_text(styles + addition)
-
-          workflow = Path('.github/workflows/collect.yml')
-          w = workflow.read_text()
-          w = w.replace('python scripts/collect.py', 'python scripts/collect_all.py')
-          w = w.replace('git add data/raw docs/data', 'git add data docs/data')
-          workflow.write_text(w)
-          PY
-
+          python -c 'from pathlib import Path; p=Path("docs/index.html"); s=p.read_text(); marker="  <script src=\"app.js\" defer></script>"; replacement="  <script src=\"station-switch.js\"></script>\n  <script src=\"app.js\" defer></script>"; p.write_text(s if "station-switch.js" in s else s.replace(marker,replacement,1))'
+          python -c 'from pathlib import Path; p=Path(".github/workflows/collect.yml"); s=p.read_text().replace("python scripts/collect.py","python scripts/collect_all.py").replace("git add data/raw docs/data","git add data docs/data"); p.write_text(s)'
           python -m py_compile scripts/collect.py scripts/collect_all.py
           node --check docs/app.js
           node --check docs/station-switch.js
@@ -63,6 +31,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html docs/styles.css .github/workflows/collect.yml
+          git add docs/index.html .github/workflows/collect.yml
           git commit -m "Enable Mandeville and beach station switching"
           git push origin HEAD:main
