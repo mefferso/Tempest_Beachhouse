@@ -315,7 +315,8 @@ def fetch_observations(
             "Set device_id explicitly in config.json if auto-discovery selected the wrong device."
         )
     records: dict[int, dict[str, Any]] = {}
-    for values in payload.get("obs", []):
+    observations = payload.get("obs") or []
+    for values in observations:
         # Some old responses wrapped each observation in one extra list.
         if len(values) == 1 and isinstance(values[0], list):
             values = values[0]
