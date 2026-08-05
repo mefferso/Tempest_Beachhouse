@@ -1,0 +1,108 @@
+name: Collect Tempest climate data
+
+on:
+  schedule:
+    # 08:17 UTC = 2:17 AM CST / 3:17 AM CDT. This allows the prior
+    # America/Chicago calendar day to finish before collection.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: What should the collector do?
+        required: true
+        default: daily
+        type: choice
+        options:
+          - daily
+          - backfill
+          - rebuild
+      start_date:
+        description: Backfill start date (YYYY-MM-DD)
+        required: false
+        default: "2024-03-18"
+        type: string
+      end_date:
+        description: Backfill end date; blank means yesterday (YYYY-MM-DD)
+        required: false
+        default: ""
+        type: string
+      force_refresh:
+        description: Replace existing raw files during a manual backfill
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tempest-climate-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      TEMPEST_TOKEN: ${{ secrets.TEMPEST_TOKEN }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Collect or rebuild data
+        env:
+          INPUT_MODE: ${{ inputs.mode }}
+          INPUT_START_DATE: ${{ inputs.start_date }}
+          INPUT_END_DATE: ${{ inputs.end_date }}
+          INPUT_FORCE_REFRESH: ${{ inputs.force_refresh }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "schedule" ]]; then
+            python scripts/collect.py --mode daily --refresh-days 7
+            exit 0
+          fi
+
+          MODE="${INPUT_MODE:-daily}"
+          if [[ "$MODE" == "rebuild" ]]; then
+            python scripts/collect.py --mode rebuild
+          elif [[ "$MODE" == "backfill" ]]; then
+            ARGS=(--mode backfill --start-date "${INPUT_START_DATE:-2024-03-18}")
+            if [[ -n "${INPUT_END_DATE:-}" ]]; then
+              ARGS+=(--end-date "$INPUT_END_DATE")
+            fi
+            if [[ "${INPUT_FORCE_REFRESH:-false}" == "true" ]]; then
+              ARGS+=(--force-refresh)
+            fi
+            python scripts/collect.py "${ARGS[@]}"
+          else
+            python scripts/collect.py --mode daily --refresh-days 7
+          fi
+
+      - name: Commit updated archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw docs/data
+
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update Tempest climate archive"
+          git pull --rebase origin main
+          git push origin HEAD:main
