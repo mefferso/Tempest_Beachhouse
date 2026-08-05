@@ -1,0 +1,30 @@
+name: Validate Tempest project
+
+on:
+  push:
+    paths:
+      - ".github/workflows/validate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python collector
+        run: |
+          python -m py_compile scripts/collect.py
+          python -m unittest discover -s tests -v
+
+      - name: Validate website JavaScript
+        run: node --check docs/app.js
