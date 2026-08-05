@@ -27,6 +27,9 @@ jobs:
           tar -xzf /tmp/tempest-project.tar.gz -C .
           rm -rf .bootstrap
           rm -f .github/workflows/bootstrap.yml
+          # GitHub's workflow token cannot create other workflow files. Those two
+          # files are added immediately afterward through the GitHub connection.
+          rm -f .github/workflows/collect.yml .github/workflows/pages.yml
 
       - name: Commit project
         shell: bash
