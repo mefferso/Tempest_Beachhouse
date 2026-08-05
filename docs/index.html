@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07131d">
+  <title>Dauphin Island Tempest Climate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="sky-glow sky-glow-one"></div>
+  <div class="sky-glow sky-glow-two"></div>
+
+  <header class="site-header shell">
+    <div>
+      <p class="eyebrow">Personal weather station archive</p>
+      <h1>Dauphin Island <span>Tempest Climate</span></h1>
+      <p class="subtitle">One-minute observations distilled into honest-to-goodness local climate statistics.</p>
+    </div>
+    <div class="header-status panel-lite">
+      <div class="status-dot" id="status-dot"></div>
+      <div>
+        <span class="status-label">Archive status</span>
+        <strong id="archive-status">Loading climate data…</strong>
+        <small id="generated-at">—</small>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="control-panel panel">
+      <div class="control-heading">
+        <div>
+          <p class="eyebrow">Choose your slice</p>
+          <h2>Climate period</h2>
+        </div>
+        <div class="mode-switch" role="group" aria-label="Date selection mode">
+          <button class="mode-button active" data-mode="actual">Actual dates</button>
+          <button class="mode-button" data-mode="calendar">Calendar climatology</button>
+        </div>
+      </div>
+
+      <div id="actual-controls" class="controls-grid">
+        <label>
+          <span>Start date</span>
+          <input id="actual-start" type="date">
+        </label>
+        <label>
+          <span>End date</span>
+          <input id="actual-end" type="date">
+        </label>
+        <div class="quick-ranges">
+          <span>Quick range</span>
+          <div>
+            <button data-range="all">All data</button>
+            <button data-range="year">Current year</button>
+            <button data-range="365">Last 365 days</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="calendar-controls" class="controls-grid hidden">
+        <div class="month-day-group">
+          <span>Start month/day</span>
+          <div>
+            <select id="calendar-start-month" aria-label="Start month"></select>
+            <select id="calendar-start-day" aria-label="Start day"></select>
+          </div>
+        </div>
+        <div class="month-day-group">
+          <span>End month/day</span>
+          <div>
+            <select id="calendar-end-month" aria-label="End month"></select>
+            <select id="calendar-end-day" aria-label="End day"></select>
+          </div>
+        </div>
+        <div class="quick-ranges calendar-presets">
+          <span>Preset</span>
+          <div>
+            <button data-calendar="full">Full year</button>
+            <button data-calendar="summer">Jun–Sep</button>
+            <button data-calendar="hurricane">Jun–Nov</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quality-row">
+        <label class="check-label">
+          <input id="quality-filter" type="checkbox" checked>
+          <span>Exclude days below 80% data completeness</span>
+        </label>
+        <button id="apply-button" class="primary-button">Apply period</button>
+      </div>
+    </section>
+
+    <section class="period-banner panel-lite">
+      <div>
+        <p class="eyebrow">Selected period</p>
+        <h2 id="period-title">—</h2>
+        <p id="period-detail">Waiting for the archive.</p>
+      </div>
+      <div class="period-actions">
+        <button id="download-button" disabled>Download selected CSV</button>
+      </div>
+    </section>
+
+    <section id="summary-grid" class="summary-grid" aria-live="polite"></section>
+
+    <section class="analysis-grid">
+      <article class="panel chart-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Daily series</p>
+            <h2>Period chart</h2>
+          </div>
+          <select id="chart-variable" aria-label="Chart variable">
+            <option value="temperature">Temperature</option>
+            <option value="dewpoint">Dew point</option>
+            <option value="humidity">Relative humidity</option>
+            <option value="pressure">Station pressure</option>
+            <option value="wind">Wind</option>
+            <option value="precip">Precipitation</option>
+            <option value="lightning">Lightning</option>
+            <option value="completeness">Data completeness</option>
+          </select>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="climate-chart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel records-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Extremes</p>
+            <h2>Period records</h2>
+          </div>
+        </div>
+        <div id="records-list" class="records-list"></div>
+      </article>
+    </section>
+
+    <section class="panel table-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Daily archive</p>
+          <h2>Selected days</h2>
+        </div>
+        <span id="table-note" class="table-note"></span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>High</th>
+              <th>Mean</th>
+              <th>Low</th>
+              <th>Dew point</th>
+              <th>RH</th>
+              <th>Avg wind</th>
+              <th>Peak gust</th>
+              <th>Direction</th>
+              <th>Rain</th>
+              <th>Lightning</th>
+              <th>Complete</th>
+            </tr>
+          </thead>
+          <tbody id="daily-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <p>Data: WeatherFlow Tempest station 135442 · Local day: America/Chicago · Built from archived one-minute observations.</p>
+  </footer>
+
+  <div id="error-box" class="error-box hidden" role="alert"></div>
+</body>
+</html>

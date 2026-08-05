@@ -1,0 +1,1 @@
+hour_local,date,hour,obs_count,observation_minutes,temp_avg_f,temp_high_f,temp_low_f,dewpoint_avg_f,rh_avg_pct,pressure_avg_mb,wind_avg_mph,wind_gust_mph,wind_vector_dir_deg,wind_vector_dir_cardinal,precip_in,lightning_count

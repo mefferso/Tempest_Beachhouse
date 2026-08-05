@@ -1,0 +1,23 @@
+{
+  "station_name": "Dauphin Island Beach House Tempest",
+  "station_id": 135442,
+  "timezone": "America/Chicago",
+  "latitude": 30.24759,
+  "longitude": -88.14754,
+  "archive_start_configured": "2024-03-18",
+  "data_start": null,
+  "data_end": null,
+  "days_archived": 0,
+  "hourly_rows": 0,
+  "generated_at_utc": "2026-08-05T00:43:16.212875Z",
+  "raw_frequency": "WeatherFlow historical one-minute observations",
+  "units": {
+    "temperature": "degF",
+    "dewpoint": "degF",
+    "relative_humidity": "percent",
+    "pressure": "mb station pressure",
+    "wind": "mph",
+    "precipitation": "inches",
+    "lightning_distance": "miles"
+  }
+}
