@@ -16,9 +16,9 @@ on:
           - backfill
           - rebuild
       start_date:
-        description: Backfill start date for both stations (YYYY-MM-DD)
+        description: Earliest requested backfill date; each station clamps to its configured archive start
         required: false
-        default: "2024-03-18"
+        default: "2021-12-29"
         type: string
       end_date:
         description: Backfill end date; blank means yesterday (YYYY-MM-DD)
@@ -79,7 +79,7 @@ jobs:
           if [[ "$MODE" == "rebuild" ]]; then
             python scripts/collect_all.py --mode rebuild
           elif [[ "$MODE" == "backfill" ]]; then
-            ARGS=(--mode backfill --start-date "${INPUT_START_DATE:-2024-03-18}")
+            ARGS=(--mode backfill --start-date "${INPUT_START_DATE:-2021-12-29}")
             if [[ -n "${INPUT_END_DATE:-}" ]]; then
               ARGS+=(--end-date "$INPUT_END_DATE")
             fi
