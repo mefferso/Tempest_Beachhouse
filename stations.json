@@ -1,0 +1,23 @@
+{
+  "timezone": "America/Chicago",
+  "stations": [
+    {
+      "station_id": 105815,
+      "station_name": "Mandeville House",
+      "short_name": "Mandeville",
+      "latitude": 30.38141,
+      "longitude": -90.06779,
+      "archive_start": "2024-03-18",
+      "device_id": null
+    },
+    {
+      "station_id": 135442,
+      "station_name": "Beach House",
+      "short_name": "Beach House",
+      "latitude": 30.24759,
+      "longitude": -88.14754,
+      "archive_start": "2024-03-18",
+      "device_id": null
+    }
+  ]
+}
