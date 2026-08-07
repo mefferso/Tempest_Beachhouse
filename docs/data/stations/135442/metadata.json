@@ -6,10 +6,10 @@
   "longitude": -88.14754,
   "archive_start_configured": "2024-03-18",
   "data_start": "2024-03-18",
-  "data_end": "2026-08-05",
-  "days_archived": 871,
+  "data_end": "2026-08-06",
+  "days_archived": 872,
   "hourly_rows": 20264,
-  "generated_at_utc": "2026-08-06T10:57:13.582570Z",
+  "generated_at_utc": "2026-08-07T09:18:02.895584Z",
   "raw_frequency": "WeatherFlow historical one-minute observations",
   "units": {
     "temperature": "degF",
