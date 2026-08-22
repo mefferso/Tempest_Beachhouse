@@ -7,8 +7,8 @@
       "latitude": 30.38141,
       "longitude": -90.06779,
       "data_start": "2021-12-29",
-      "data_end": "2026-08-20",
-      "days_archived": 1696
+      "data_end": "2026-08-21",
+      "days_archived": 1697
     },
     {
       "station_id": 135442,
@@ -17,8 +17,8 @@
       "latitude": 30.24759,
       "longitude": -88.14754,
       "data_start": "2024-03-18",
-      "data_end": "2026-08-20",
-      "days_archived": 886
+      "data_end": "2026-08-21",
+      "days_archived": 887
     }
   ]
 }
